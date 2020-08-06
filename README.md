@@ -19,6 +19,10 @@ NoonMap(재난문자) Project
       - 재난 종류/ 발신처에 따라 재난 상황의 심각성을 구분
       - 재난 상황의 심각성을 3단계로 세분화
           심각성 어떻게 정할건지 블라블라(이미지 추가)
+<<<<<<< HEAD
+=======
+![img1](https://github.com/bigdata-course-KU-team11/NoonMap-Project/blob/master/%EC%84%9C%EB%B9%84%EC%8A%A4%20%EC%A0%9C%EA%B3%B51.PNG)
+>>>>>>> 9a9973c... Update README.md
     2. 지역별 실시간 상황을 시각화하여 전달
       - 각 재난에 대응하는 아이콘을 지역구 지도에 표시
       - 재난을 지속성에 따라 구분하여 일정 시간이 지난 후 지도에서 사라지게 함
