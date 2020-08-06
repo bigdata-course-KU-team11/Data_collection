@@ -7,3 +7,5 @@
 - 시작일 2011/11/18 기준
 - json 형태로 받은 뒤, pandas의 DataFrame 형식으로 변환하여 활용
 - link: https://www.data.go.kr/data/3058822/openapi.do
+## 3. 데이터 전처리
+- 안전문자 word-tokenization
