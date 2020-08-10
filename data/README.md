@@ -11,3 +11,8 @@
 - link: https://www.data.go.kr/data/3058822/openapi.do
 ## 3. 데이터 전처리
 - 안전문자 word-tokenization
+
+## 4. 도로 침수 정보 수집
+- 서울시 실시간 도로 돌발정보
+- file: api_road_flooding.ipynb
+- link: https://topis.seoul.go.kr/refRoom/openRefRoom_4.do
