@@ -30,5 +30,4 @@
       - 마커 선택시 교량 정보 제공
 
 
-
-![img1](https://github.com/bigdata-course-KU-team11/NoonMap-Project/blob/master/img/img1.PNG)
+![img1](https://github.com/bigdata-course-KU-team11/NoonMap-Project/blob/master/img/gif.gif)
