@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="row">
+    <div class="col-sm-3 col-md-2 sidebar">
+        <ul class="nav nav-sidebar">
+            <li class="active"><a href="#">시스템 소개 <span class="sr-only">(current)</span></a></li>
+            <li><a href="LSTM.html">분석 모델</a></li>
+            <li><a href="json.html">교량 날짜 선택</a></li>
+        </ul>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+        <h1 class="page-header">교량 하천 수위 위험도 시스템</h1>
+        {#        {{ map_div }}#}
+        <div class="row placeholders">
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <img data-src="holder.js/200x200/auto/sky" class="img-responsive"
+                     alt="Generic placeholder thumbnail">
+                <h4>Label</h4>
+                <span class="text-muted">Something else</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <img data-src="holder.js/200x200/auto/vine" class="img-responsive"
+                     alt="Generic placeholder thumbnail">
+                <h4>Label</h4>
+                <span class="text-muted">Something else</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <img data-src="holder.js/200x200/auto/sky" class="img-responsive"
+                     alt="Generic placeholder thumbnail">
+                <h4>Label</h4>
+                <span class="text-muted">Something else</span>
+            </div>
+            <div class="col-xs-6 col-sm-3 placeholder">
+                <img data-src="holder.js/200x200/auto/vine" class="img-responsive"
+                     alt="Generic placeholder thumbnail">
+                <h4>Label</h4>
+                <span class="text-muted">Something else</span>
+            </div>
+        </div>
+
+        <h2 class="sub-header">교량 목록</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>bridge_name</th>
+                    <th>address</th>
+                    <th>etc_address</th>
+                    <th>location_start</th>
+                    <th>obs_date</th>
+                    <th>WL</th>
+                    <th>bridge_height</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for result in result_brid %}
+                    <tr>
+                        <td>{{ result.bridge_name }}</td>
+                        <td>{{ result.address }}</td>
+                        <td>{{ result.etc_address }}</td>
+                        <td>{{ result.location_start }}</td>
+                        <td>{{ result.obs_date }}</td>
+                        <td>{{ result.WL }}</td>
+                        <td>{{ result.bridge_height }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="sub-header">재난문자 목록</h2>
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>index</th>
+                    <th>date</th>
+                    <th>location_name</th>
+                    <th>msg</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for result in result_rain %}
+                    <tr>
+                        <td>{{ result.index }}</td>
+                        <td>{{ result.create_date }}</td>
+                        <td>{{ result.location_name }}</td>
+                        <td>{{ result.msg }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
