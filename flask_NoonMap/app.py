@@ -1,11 +1,10 @@
 import folium
-import os
+# import os
 import json
-import print as print
-from flask import Flask, render_template, Markup, request, jsonify
-from flask_admin import Admin
-from flask_admin.contrib.sqla import ModelView
-from flask_dropzone import Dropzone
+from flask import Flask, render_template, Markup, request
+# from flask_admin import Admin
+# from flask_admin.contrib.sqla import ModelView
+# from flask_dropzone import Dropzone
 from flask_sqlalchemy import SQLAlchemy
 
 #################################################################
@@ -19,12 +18,12 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #################################################################
 db = SQLAlchemy(app)
 db.init_app(app)
-admin = Admin(name='test')  # sql alchemy와 연동 가능
-admin.init_app(app)
-Dropzone(app)
-
-basedir = os.path.abspath(os.path.dirname(__file__))
-upload = os.path.join(basedir, 'uploads')
+# admin = Admin(name='test')  # sql alchemy와 연동 가능
+# admin.init_app(app)
+# Dropzone(app)
+#
+# basedir = os.path.abspath(os.path.dirname(__file__))
+# upload = os.path.join(basedir, 'uploads')
 #################################################################
 
 
@@ -59,7 +58,7 @@ class Rain_msg(db.Model):
 #################################################################
 
 
-admin.add_view(ModelView(Rain_msg, db.session))
+# admin.add_view(ModelView(Rain_msg, db.session))
 #################################################################
 
 
@@ -67,42 +66,19 @@ db.create_all()  # 테이블 생성
 #################################################################
 
 
-@app.route('/LSTM.html')
-def model():
-    return render_template('LSTM.html')
-
-
-# @app.route('/json.html', methods=['GET', 'POST'])
-# def calendar_sel():
-#     # if request.method == 'POST':
-#     #     calendar_data = request.form
-#     return render_template('json.html') #, result_cal = calendar_data)
-#
-#
-# @app.route('/google')
-# def google():
-#     x = [
-#   {
-#     "title": "한평교",
-#     "start": "2014-09-01"
-#   },
-# {
-#     "id": "999",
-#     "title": "무슨 교",
-#     "start": "2014-09-09T16:00:00-05:00"
-#   },
-# ]
-#     return jsonify(x) # json으로 변환시켜줌
-
-
-@app.route('/', methods=['GET'])
+@app.route('/home')
+@app.route('/')
 def home():
+    status = request.args.get('status', '0')
+    print(status)
+    #############################################################################
     rain = Rain_msg.query.all()  # (SELECT * FROM 테이블명)과 동일함
     bridge = Bridge.query.filter_by(address="경기도", bridge_name="한평교").all()
     #############################################################################
     start_coords = (37.5838699, 127.0565831)
     folium_map = folium.Map(location=start_coords, zoom_start=11, width='100%')
 
+    #############################################################################
     with open('seoul_geo.json', mode='rt', encoding='utf-8') as f:
         geo_seoul = json.loads(f.read())
         f.close()
@@ -112,6 +88,7 @@ def home():
         name='seoul_geo'
     ).add_to(folium_map)
 
+    #############################################################################
     _ = folium_map._repr_html_()
 
     # get definition of map in body
@@ -122,7 +99,7 @@ def home():
     script_txt = Markup(folium_map.get_root().script.render())
     #############################################################################
 
-    return render_template('index.html', map_div=map_div, hdr_txt=hdr_txt, script_txt=script_txt, result_rain=rain, result_brid=bridge)
+    return render_template('index.html', status=status, map_div=map_div, hdr_txt=hdr_txt, script_txt=script_txt, result_rain=rain, result_brid=bridge)
 
 
 if __name__ == '__main__':
