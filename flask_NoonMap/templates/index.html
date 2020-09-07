@@ -41,9 +41,11 @@
             <ul class="nav nav-sidebar">
                 <li {% if status == '0' %}class="active"{% endif %}><a href="{{ url_for('home', status = '0') }}">시스템 소개
                 </a></li>
-                <li {% if status == '1' %}class="active"{% endif %}><a href="{{ url_for('home', status = '1') }}">재난문자 목록
+                <li {% if status == '1' %}class="active"{% endif %}><a href="{{ url_for('home', status = '1') }}">재난문자
+                    목록
                 </a></li>
-                <li {% if status == '2' %}class="active"{% endif %}><a href="{{ url_for('home', status = '2') }}">예측모델 성능
+                <li {% if status == '2' %}class="active"{% endif %}><a href="{{ url_for('home', status = '2') }}">예측모델
+                    성능
                 </a></li>
             </ul>
         </div>
