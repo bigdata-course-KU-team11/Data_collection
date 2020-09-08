@@ -97,20 +97,29 @@
                             </tr>
                             </thead>
                             <tbody>
-                            {% for result in result_brid %}
-                                <tr>
-                                    <td>{{ result.bridge_name }}</td>
-                                    <td>{{ result.address }}</td>
-                                    <td>{{ result.etc_address }}</td>
-                                    <td>{{ result.location_start }}</td>
-{#                                    <td>{{ result.obs_date }}</td>#}
-                                    <td>{{ result.WL }}</td>
-                                    <td>{{ result.bridge_height }}</td>
-                                </tr>
-                            {% endfor %}
+                            {% if result_brid != None %}
+                                {% for result in result_brid %}
+                                    <tr>
+                                        <td>{{ result.bridge_name }}</td>
+                                        <td>{{ result.address }}</td>
+                                        <td>{{ result.etc_address }}</td>
+                                        <td>{{ result.location_start }}</td>
+                                        {#                                    <td>{{ result.obs_date }}</td>#}
+                                        <td>{{ result.WL }}</td>
+                                        <td>{{ result.bridge_height }}</td>
+                                    </tr>
+                                {% endfor %}
+                            {% endif %}
                             </tbody>
                         </table>
                     </div>
+                    <form method="post">
+                        <div class="bs-docs-social-buttons">
+                            <input name="btn_area" type="submit" value="seoul"> </input>
+                            <input name="btn_area" type="submit" value="incheon"> </input>
+                            <input name="btn_area" type="submit" value="gyeonggi"> </input>
+                        </div>
+                    </form>
                 {% elif status == '1' %}
                     <h2 class="sub-header">재난문자 목록</h2>
                     <div class="table-responsive">
