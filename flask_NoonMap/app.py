@@ -3,6 +3,7 @@ import json
 from flask import Flask, render_template, Markup, request
 from flask_sqlalchemy import SQLAlchemy
 from folium.plugins import MarkerCluster
+
 # import bridge
 #
 # app = Flask(__name__)
@@ -13,13 +14,15 @@ from folium.plugins import MarkerCluster
 
 app = Flask(__name__)  # bridge.db, rain_msg.db 연동
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///bridge.db"
-app.config['SQLALCHEMY_BINDS'] = {   # multiple databases
+app.config['SQLALCHEMY_BINDS'] = {  # multiple databases
     'bridge_key': 'sqlite:///bridge.db',
     'rain_key': 'sqlite:///rain_msg.db'
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 #################################################################
 db = SQLAlchemy(app)
+
+
 # db.init_app(app)
 #################################################################
 
@@ -52,11 +55,15 @@ class Rain_msg(db.Model):
     location_name = db.Column(db.Text)
     md101_sn = db.Column(db.Text)
     msg = db.Column(db.Text)
+
+
 #################################################################
 
 
 db.create_all(bind='bridge_key')  # 테이블 생성
 db.create_all(bind='rain_key')
+
+
 #################################################################
 
 
@@ -67,9 +74,17 @@ def home():
     print(status)
     #############################################################################
     rain = Rain_msg.query.all()  # (SELECT * FROM 테이블명)과 동일함
-    bridges = Bridge.query.filter_by(address="서울특별시").all()  # None이 반환됨, orm 연동이 잘 안된 것으로 추정
-    # bridges = bridge.Bridge.query.get(1)
-    print(bridges)  # list의 select 결과
+    list_gyeonggi = db.session.query(Bridge.location_start.distinct(), Bridge.latitude, Bridge.longitude,
+                                     Bridge.bridge_name, Bridge.bridge_height, Bridge.WL, Bridge.address, Bridge.etc_address).filter_by(address="경기도").all()
+    list_seoul = db.session.query(Bridge.location_start.distinct(), Bridge.latitude, Bridge.longitude,
+                                  Bridge.bridge_name, Bridge.bridge_height, Bridge.WL, Bridge.address, Bridge.etc_address).filter_by(address="서울특별시").all()
+    list_incheon = db.session.query(Bridge.location_start.distinct(), Bridge.latitude, Bridge.longitude,
+                                    Bridge.bridge_name, Bridge.bridge_height, Bridge.WL, Bridge.address, Bridge.etc_address).filter_by(address="인천광역시").all()
+    # for i in list_seoul:
+    #     bridges = Bridge.query().filter_by(location_start=i.location_start).all()
+
+    print(list_seoul, list_gyeonggi, list_incheon)  # list의 select 결과
+    print(len(list_seoul), len(list_gyeonggi), len(list_incheon))
     #############################################################################
     start_coords = (37.5838699, 127.0565831)  # 시작 좌표
     m = folium.Map(location=start_coords, zoom_start=9, width='100%')
@@ -85,8 +100,8 @@ def home():
     ).add_to(m)
     #############################################################################
     folium_map = MarkerCluster().add_to(m)
-
-    for i in bridges:
+    # print(len(bridges))
+    for i in list_seoul:
         print(i.latitude, i.longitude)
         text = "이름: " + str(i.bridge_name) + "\n높이: " + str(i.bridge_height) + "\n수위: " + str(i.WL)
         pp_text = folium.IFrame(text, width=100, height=150)
@@ -108,7 +123,8 @@ def home():
     script_txt = Markup(folium_map.get_root().script.render())
     #############################################################################
 
-    return render_template('index.html', status=status, map_div=map_div, hdr_txt=hdr_txt, script_txt=script_txt, result_rain=rain, result_brid=bridges)
+    return render_template('index.html', status=status, map_div=map_div, hdr_txt=hdr_txt, script_txt=script_txt,
+                           result_rain=rain, result_brid=list_seoul)
 
 
 if __name__ == '__main__':
