@@ -35,6 +35,13 @@
 <body>
 {% include 'dashboard.html' %} <!-- 대시보드-->
 
+<hr/>
+<h1 class="page-header">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;교량
+    하천 수위 위험 예측 서비스</h1>
+{% if status == '0' %}
+    {{ map_div }} <!-- 지도 -->
+{% endif %}
+
 <div class="container-fluid">
     <div class="row">
         <div class="col-sm-3 col-md-2 sidebar">
@@ -54,46 +61,28 @@
         {% endif %}
         {% if status != '2' %}
             <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                <h1 class="page-header">교량 하천 수위 위험도 시스템</h1>
-                <div class="row placeholders">
-                    <div class="col-xs-6 col-sm-3 placeholder">
-                        <img data-src="holder.js/200x200/auto/sky" class="img-responsive"
-                             alt="Generic placeholder thumbnail">
-                        <h4>Label</h4>
-                        <span class="text-muted">Something else</span>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 placeholder">
-                        <img data-src="holder.js/200x200/auto/vine" class="img-responsive"
-                             alt="Generic placeholder thumbnail">
-                        <h4>Label</h4>
-                        <span class="text-muted">Something else</span>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 placeholder">
-                        <img data-src="holder.js/200x200/auto/sky" class="img-responsive"
-                             alt="Generic placeholder thumbnail">
-                        <h4>Label</h4>
-                        <span class="text-muted">Something else</span>
-                    </div>
-                    <div class="col-xs-6 col-sm-3 placeholder">
-                        <img data-src="holder.js/200x200/auto/vine" class="img-responsive"
-                             alt="Generic placeholder thumbnail">
-                        <h4>Label</h4>
-                        <span class="text-muted">Something else</span>
-                    </div>
-                </div>
                 {% if status == '0' %}
+                    <form method="post">
+                        <div class="text-center">
+                            <input class="btn btn-lg btn-primary" name="btn_area" type="submit"
+                                   value="seoul">&nbsp; </input>
+                            <input class="btn btn-lg btn-primary" name="btn_area" type="submit"
+                                   value="incheon">&nbsp; </input>
+                            <input class="btn btn-lg btn-primary" name="btn_area" type="submit"
+                                   value="gyeonggi">&nbsp; </input>
+                        </div>
+                    </form>
+                    <hr/>
                     <h2 class="sub-header">교량 목록</h2>
                     <div class="table-responsive">
                         <table class="table table-striped">
                             <thead>
                             <tr>
-                                <th>bridge_name</th>
-                                <th>address</th>
-                                <th>etc_address</th>
-                                <th>location_start</th>
-                                <th>obs_date</th>
-                                <th>WL</th>
-                                <th>bridge_height</th>
+                                <th>교량 이름</th>
+                                <th>주소</th>
+                                <th>상세 주소</th>
+                                <th>예측 수위(cm)</th>
+                                <th>교량 높이(cm)</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -103,8 +92,6 @@
                                         <td>{{ result.bridge_name }}</td>
                                         <td>{{ result.address }}</td>
                                         <td>{{ result.etc_address }}</td>
-                                        <td>{{ result.location_start }}</td>
-                                        {#                                    <td>{{ result.obs_date }}</td>#}
                                         <td>{{ result.WL }}</td>
                                         <td>{{ result.bridge_height }}</td>
                                     </tr>
@@ -113,13 +100,6 @@
                             </tbody>
                         </table>
                     </div>
-                    <form method="post">
-                        <div class="bs-docs-social-buttons">
-                            <input name="btn_area" type="submit" value="seoul"> </input>
-                            <input name="btn_area" type="submit" value="incheon"> </input>
-                            <input name="btn_area" type="submit" value="gyeonggi"> </input>
-                        </div>
-                    </form>
                 {% elif status == '1' %}
                     <h2 class="sub-header">재난문자 목록</h2>
                     <div class="table-responsive">
@@ -149,11 +129,6 @@
         {% endif %}
     </div>
 </div>
-{% if status == '0' %}
-    <hr/>
-    {{ map_div }} <!-- 지도 -->
-    <hr/>
-{% endif %}
 
 <!-- Bootstrap core JavaScript
 ================================================== -->

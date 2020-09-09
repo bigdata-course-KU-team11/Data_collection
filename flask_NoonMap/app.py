@@ -4,14 +4,6 @@ from flask import Flask, render_template, Markup, request
 from flask_sqlalchemy import SQLAlchemy
 from folium.plugins import MarkerCluster
 
-# import bridge
-#
-# app = Flask(__name__)
-# app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///bridge.db"
-# app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-# db = SQLAlchemy(app)
-# bridge.db.init_app(app)
-
 app = Flask(__name__)  # bridge.db, rain_msg.db 연동
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///bridge_db.db"
 app.config['SQLALCHEMY_BINDS'] = {  # multiple databases
@@ -19,11 +11,8 @@ app.config['SQLALCHEMY_BINDS'] = {  # multiple databases
     'rain_key': 'sqlite:///rain_msg.db'
 }
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-#################################################################
 db = SQLAlchemy(app)
 
-
-# db.init_app(app)
 #################################################################
 
 
@@ -68,11 +57,32 @@ db.create_all(bind='rain_key')
 #################################################################
 
 
+list_seoul = db.session.query(Bridge.latitude, Bridge.longitude,
+                                 Bridge.bridge_name, Bridge.bridge_height, Bridge.WL, Bridge.address,
+                                 Bridge.etc_address).group_by(Bridge.location_start).filter_by(address="서울특별시").all()
+
+list_incheon = db.session.query(Bridge.latitude, Bridge.longitude,
+                                 Bridge.bridge_name, Bridge.bridge_height, Bridge.WL, Bridge.address,
+                                 Bridge.etc_address).group_by(Bridge.location_start).filter_by(address="인천광역시").all()
+
+list_gyeonggi = db.session.query(Bridge.latitude, Bridge.longitude,
+                                 Bridge.bridge_name, Bridge.bridge_height, Bridge.WL, Bridge.address,
+                                 Bridge.etc_address).group_by(Bridge.location_start).filter_by(address="경기도").all()
+
+
+#################################################################
+
+@app.route('/predict', methods=['POST'])
+def predict():
+    return
+
+
 @app.route('/home', methods=['GET', 'POST'])
 @app.route('/', methods=['GET', 'POST'])
 def home():
     status = request.args.get('status', '0')  # sidebar menu get value
     print(status)
+    #############################################################################
 
     area_value = None
     if request.method == 'POST':
@@ -83,19 +93,15 @@ def home():
 
     list_area = None
     if area_value == 'seoul':
-        list_area = db.session.query(Bridge.location_start.distinct(), Bridge.latitude, Bridge.longitude,
-                                  Bridge.bridge_name, Bridge.bridge_height, Bridge.WL, Bridge.address, Bridge.etc_address).filter_by(address="서울특별시").all()
+        list_area = list_seoul
     elif area_value == 'incheon':
-        list_area = db.session.query(Bridge.location_start.distinct(), Bridge.latitude, Bridge.longitude,
-                                    Bridge.bridge_name, Bridge.bridge_height, Bridge.WL, Bridge.address, Bridge.etc_address).filter_by(address="인천광역시").all()
+        list_area = list_incheon
     elif area_value == 'gyeonggi':
-        list_area = db.session.query(Bridge.location_start.distinct(), Bridge.latitude, Bridge.longitude,
-                                     Bridge.bridge_name, Bridge.bridge_height, Bridge.WL, Bridge.address, Bridge.etc_address).filter_by(address="경기도").all()
+        list_area = list_gyeonggi
 
     print(list_area)  # list의 select 결과
-    # print(len(list_area))
     #############################################################################
-    start_coords = (37.5838699, 127.0565831)  # 시작 좌표
+    start_coords = (37.646495, 126.739804)  # 시작 좌표
     m = folium.Map(location=start_coords, zoom_start=9, width='100%')
 
     #############################################################################
@@ -108,7 +114,6 @@ def home():
     ).add_to(m)
     #############################################################################
     folium_map = MarkerCluster().add_to(m)
-    # print(len(bridges))
 
     if list_area != None:
         for i in list_area:
