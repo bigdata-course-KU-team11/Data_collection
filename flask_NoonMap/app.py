@@ -3,7 +3,6 @@ import json
 from flask import Flask, render_template, Markup, request
 from flask_sqlalchemy import SQLAlchemy
 from folium.plugins import MarkerCluster
-from datetime import datetime
 import numpy as np
 import pandas as pd
 from tensorflow import keras
@@ -162,6 +161,9 @@ def home():
     print(pred_wl)
     print(list_area)  # list의 select 결과
 
+    len_area = None
+    if list_area != None:
+        len_area = len(list_area)
     #############################################################################
 
     start_coords = (37.646495, 126.739804)  # 시작 좌표
@@ -181,12 +183,28 @@ def home():
 
     folium_map = MarkerCluster().add_to(m)
 
+    danger = []
+
     if list_area != None:
         for i in range(len(list_area)):
-            text = "이름: " + str(list_area[i].bridge_name) + "\n높이: " + str(list_area[i].bridge_height) + "\n수위: " + str(pred_wl[i])
+            text = "이름: " + str(list_area[i].bridge_name) + "<br>높이: " + str(list_area[i].bridge_height) + "<br>수위: " + str(pred_wl[i])
             pp_text = folium.IFrame(text, width=100, height=150)
             pp = folium.Popup(pp_text, max_width=400)
-            ic = folium.Icon(color='red', icon='info-sign')
+            if list_area[i].bridge_height * 0.3 > pred_wl[i]:
+                print('blue: ')
+                print(pred_wl[i], list_area[i].bridge_height * 0.3)
+                ic = folium.Icon(color='blue', icon='info-sign')
+                danger.append('양호')
+            elif list_area[i].bridge_height * 0.6 > pred_wl[i]:
+                print('yellow: ')
+                print(pred_wl[i], list_area[i].bridge_height * 0.6)
+                ic = folium.Icon(color='orange', icon='info-sign')
+                danger.append('주의')
+            else:
+                print('red: ')
+                print(pred_wl[i])
+                ic = folium.Icon(color='red', icon='info-sign')
+                danger.append('위험')
             folium.Marker(
                 location=[list_area[i].latitude, list_area[i].longitude],
                 popup=pp,
@@ -207,7 +225,7 @@ def home():
     #############################################################################
 
     return render_template('index.html', status=status, map_div=map_div, hdr_txt=hdr_txt, script_txt=script_txt,
-                           result_rain=rain, result_brid=list_area, now=datetime.today())
+                           result_rain=rain, result_brid=list_area, pred=pred_wl, len_brid=len_area, danger_text=danger)
 
 
 if __name__ == '__main__':

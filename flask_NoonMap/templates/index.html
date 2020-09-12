@@ -34,7 +34,6 @@
 
 <body>
 {% include 'dashboard.html' %} <!-- 대시보드-->
-
 <hr/>
 <h1 class="page-header">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;교량
     하천 수위 위험 예측 서비스</h1>
@@ -83,17 +82,19 @@
                                 <th>상세 주소</th>
                                 <th>예측 수위(cm)</th>
                                 <th>교량 높이(cm)</th>
+                                <th>위험도</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% if result_brid != None %}
-                                {% for result in result_brid %}
+                                {% for i in range(len_brid) %}
                                     <tr>
-                                        <td>{{ result.bridge_name }}</td>
-                                        <td>{{ result.address }}</td>
-                                        <td>{{ result.etc_address }}</td>
-                                        <td>{{ result.WL }}</td>
-                                        <td>{{ result.bridge_height }}</td>
+                                        <td>{{ result_brid[i].bridge_name }}</td>
+                                        <td>{{ result_brid[i].address }}</td>
+                                        <td>{{ result_brid[i].etc_address }}</td>
+                                        <td>{{ pred[i] }}</td>
+                                        <td>{{ result_brid[i].bridge_height }}</td>
+                                        <td>{{ danger_text[i] }}</td>
                                     </tr>
                                 {% endfor %}
                             {% endif %}
