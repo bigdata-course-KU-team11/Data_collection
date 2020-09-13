@@ -30,105 +30,85 @@
     <script src="https://oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
     <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
     <![endif]-->
+    <link href="static/docs/examples/justified-nav/justified-nav.css" rel="stylesheet">
 </head>
 
 <body>
-{% include 'dashboard.html' %} <!-- 대시보드-->
-<hr/>
-<h1 class="page-header">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;교량
-    하천 수위 위험 예측 서비스</h1>
+{#{% include 'dashboard.html' %} <!-- 대시보드-->#}
+{% include'menu_bar.html' %}
+
 {% if status == '0' %}
+    <hr/>
     {{ map_div }} <!-- 지도 -->
 {% endif %}
 
-<div class="container-fluid">
+<div class="container">
+    {% if status == '2' %}
+        {% include 'LSTM.html' %}
+    {% endif %}
+    {% if status != '2' %}
+
     <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-            <ul class="nav nav-sidebar">
-                <li {% if status == '0' %}class="active"{% endif %}><a href="{{ url_for('home', status = '0') }}">시스템 소개
-                </a></li>
-                <li {% if status == '1' %}class="active"{% endif %}><a href="{{ url_for('home', status = '1') }}">재난문자
-                    목록
-                </a></li>
-                <li {% if status == '2' %}class="active"{% endif %}><a href="{{ url_for('home', status = '2') }}">예측모델
-                    성능
-                </a></li>
-            </ul>
-        </div>
-        {% if status == '2' %}
-            {% include 'LSTM.html' %}
-        {% endif %}
-        {% if status != '2' %}
-            <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
-                {% if status == '0' %}
-                    <form method="post">
-                        <div class="text-center">
-                            <input class="btn btn-lg btn-primary" name="btn_area" type="submit"
-                                   value="seoul">&nbsp; </input>
-                            <input class="btn btn-lg btn-primary" name="btn_area" type="submit"
-                                   value="incheon">&nbsp; </input>
-                            <input class="btn btn-lg btn-primary" name="btn_area" type="submit"
-                                   value="gyeonggi">&nbsp; </input>
-                        </div>
-                    </form>
-                    <hr/>
-                    <h2 class="sub-header">교량 목록</h2>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>교량 이름</th>
-                                <th>주소</th>
-                                <th>상세 주소</th>
-                                <th>예측 수위(cm)</th>
-                                <th>교량 높이(cm)</th>
-                                <th>위험도</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% if result_brid != None %}
-                                {% for i in range(len_brid) %}
-                                    <tr>
-                                        <td>{{ result_brid[i].bridge_name }}</td>
-                                        <td>{{ result_brid[i].address }}</td>
-                                        <td>{{ result_brid[i].etc_address }}</td>
-                                        <td>{{ pred[i] }}</td>
-                                        <td>{{ result_brid[i].bridge_height }}</td>
-                                        <td>{{ danger_text[i] }}</td>
-                                    </tr>
-                                {% endfor %}
-                            {% endif %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% elif status == '1' %}
-                    <h2 class="sub-header">재난문자 목록</h2>
-                    <div class="table-responsive">
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th>index</th>
-                                <th>date</th>
-                                <th>location_name</th>
-                                <th>msg</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {% for result in result_rain %}
+        <div class="col-lg-12"> <!--class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main" -->
+            {% if status == '0' %}
+                <hr/>
+                <h2 class="sub-header">교량 목록</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>교량 이름</th>
+                            <th>주소</th>
+                            <th>상세 주소</th>
+                            <th>예측 수위(cm)</th>
+                            <th>교량 높이(cm)</th>
+                            <th>위험도</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% if result_brid != None %}
+                            {% for i in range(len_brid) %}
                                 <tr>
-                                    <td>{{ result.index }}</td>
-                                    <td>{{ result.create_date }}</td>
-                                    <td>{{ result.location_name }}</td>
-                                    <td>{{ result.msg }}</td>
+                                    <td>{{ result_brid[i].bridge_name }}</td>
+                                    <td>{{ result_brid[i].address }}</td>
+                                    <td>{{ result_brid[i].etc_address }}</td>
+                                    <td>{{ pred[i] }}</td>
+                                    <td>{{ result_brid[i].bridge_height }}</td>
+                                    <td>{{ danger_text[i] }}</td>
                                 </tr>
                             {% endfor %}
-                            </tbody>
-                        </table>
-                    </div>
-                {% endif %}
-            </div>
-        {% endif %}
+                        {% endif %}
+                        </tbody>
+                    </table>
+                </div>
+            {% elif status == '1' %}
+                <h2 class="sub-header">재난문자 목록</h2>
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th>index</th>
+                            <th>date</th>
+                            <th>location_name</th>
+                            <th>msg</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for result in result_rain %}
+                            <tr>
+                                <td>{{ result.index }}</td>
+                                <td>{{ result.create_date }}</td>
+                                <td>{{ result.location_name }}</td>
+                                <td>{{ result.msg }}</td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </div>
     </div>
+    {% endif %}
 </div>
 
 <!-- Bootstrap core JavaScript

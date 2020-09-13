@@ -137,8 +137,8 @@ def home():
     #############################################################################
 
     area_value = None
-    if request.method == 'POST':
-        area_value = request.form['btn_area']  # button post value
+    if request.method == 'GET':
+        area_value = request.args.get('btn_area', '0')  # button post value
     print(area_value)
 
     #############################################################################
@@ -166,7 +166,7 @@ def home():
         len_area = len(list_area)
     #############################################################################
 
-    start_coords = (37.646495, 126.739804)  # 시작 좌표
+    start_coords = (37.5642135, 127.0016985)  # 시작 좌표
     m = folium.Map(location=start_coords, zoom_start=9, width='100%')
 
     #############################################################################

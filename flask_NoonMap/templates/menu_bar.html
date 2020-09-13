@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <script src=" http://ajax.googleapis.com/ajax/libs/jquery/xxx/jquery.min.js "></script>
+    <script src=" static/bpopup-master/jquery.bpopup.min.js "></script>
+    <style>
+        #element_to_pop_up {
+            background-color: #fff;
+            border-radius: 15px;
+            color: #000;
+            display: none;
+            padding: 20px;
+            min-width: 400px;
+            min-height: 180px;
+        }
+
+        .b-close {
+            cursor: pointer;
+            position: absolute;
+            right: 10px;
+            top: 5px;
+        }
+    </style>
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f9f9f9;
+            min-width: 270px;
+            box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .dropdown-content a {
+            text-align: left;
+            color: black;
+            padding: 12px;
+            text-decoration: none;
+        }
+
+        .dropdown-content a:hover {
+            background-color: #f1f1f1
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="masthead">
+        <h2 class="text-capitalize">NoonMap 교량 하천수위 예측 시스템</h2>
+        <nav>
+            <ul class="nav nav-justified">
+                <li {% if status == '0' %}class="active"{% endif %}><a
+                        href="{{ url_for('home', status = '0') }}">Home</a></li>
+                <li id="my-button"><a href="#">Menual</a></li>
+                <li {% if status == '1' %}class="active"{% endif %}><a href="{{ url_for('home', status = '1') }}">재난문자
+                    목록</a></li>
+                <li {% if status == '2' %}class="active"{% endif %}><a href="{{ url_for('home', status = '2') }}">예측모델
+                    성능</a></li>
+                <li class="dropdown">
+                    <a>Prediction 지역
+                        <span class="caret"></span></a>
+                    <ul class="dropdown-content">
+                        <form method="post">
+                            <a href="{{ url_for('home', btn_area = 'seoul') }}">Seoul</a>
+                            <a href="{{ url_for('home', btn_area = 'incheon') }}">Incheon</a>
+                            <a href="{{ url_for('home', btn_area = 'gyeonggi') }}">Gyeonggi</a>
+                        </form>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+<!-- Element to pop up -->
+<div id="element_to_pop_up">
+    <a class="b-close">x</a>
+    <h1 class="alert-heading">NoonMap이란?</h1>
+    <p style="font-size: 20px">NoonMap 서비스에 찾아주셔서 감사합니다.</p>
+    <p style="font-size: 20px">NoonMap은 수도권 지역 내 교량들의 하천 수위를 실시간으로 예측하여 교량 침수 위험도를 Map에 시각화하여 보여주는 서비스입니다.</p>
+    <hr>
+    <h1>NoonMap 설명서</h1>
+    <p><h3>&nbsp;1. 상단 메뉴바 구성</h3></p>
+    <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-1)Home: 수도권 지역을 경계선으로 나타내어 시각화합니다.</p>
+    <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-2)Menual: NoonMap 설명서를 팝업으로 나타내줍니다.</p>
+    <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-3)재난문자 목록: 수도권 지역
+        호우주의보 안전재난문자 목록을 보여줍니다.(추후 실시간 수집 후, 호우주의 문자 발송 지역을 1차 시각화하여 해당 지역의 교량 침수 위험도 예측)</p>
+    <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-4)예측모델 성능: 실시간 하천
+        수위 예측에 사용한 LSTM 시계열 모델의 성능 그래프를 볼 수 있습니다.</p>
+    <p style="font-size: 20px">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;1-5)Prediction 지역: 서울, 인천, 경기 지역에 위치한 교량들의 침수 위험 예측을 시작합니다.</p>
+    <img src="static/image/gif.gif">
+</div>
+</body>
+<script>
+    // Semicolon (;) to ensure closing of earlier scripting
+    // Encapsulation
+    // $ is assigned to jQuery
+    ;(function ($) {
+        // DOM Ready
+        $(function () {
+            // Binding a click event
+            // From jQuery v.1.7.0 use .on() instead of .bind()
+            $('#my-button').bind('click', function (e) {
+                // Prevents the default action to be triggered.
+                e.preventDefault();
+                // Triggering bPopup when click event is fired
+                $('#element_to_pop_up').bPopup();
+            });
+        });
+    })(jQuery);
+</script>
+
+</html>
