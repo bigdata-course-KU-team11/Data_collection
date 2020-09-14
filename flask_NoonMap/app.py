@@ -188,7 +188,7 @@ def home():
     if list_area != None:
         for i in range(len(list_area)):
             text = "이름: " + str(list_area[i].bridge_name) + "<br>높이: " + str(list_area[i].bridge_height) + "<br>수위: " + str(pred_wl[i])
-            pp_text = folium.IFrame(text, width=100, height=150)
+            pp_text = folium.IFrame(text, width=220, height=110)
             pp = folium.Popup(pp_text, max_width=400)
             if list_area[i].bridge_height * 0.3 > pred_wl[i]:
                 print('blue: ')
