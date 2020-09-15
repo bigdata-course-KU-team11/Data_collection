@@ -71,9 +71,9 @@
                 <div class="carousel-item active" style="background: url(static/assets/img/slide/home_image.png);">
                     <div class="carousel-container">
                         <div class="carousel-content">
-                            <h2 class="animate__animated animate__fadeInDown">NoonMap의 교량 침수 위험 예측 서비스</h2>
-                            <p class="animate__animated animate__fadeInUp">수도권 교량의 침수 위험으로부터 피해를 미리 줄이기 위한<br>침수 위험도 예측
-                                시스템을 시작합니다!</p>
+                            <h2 class="animate__animated animate__fadeInDown">교량별 침수 위험도 예측 서비스</h2>
+                            <p class="animate__animated animate__fadeInUp">수도권 내 교량의 침수 위험도를 예측하는<br>NOONMAP
+                                서비스를 시작합니다!</p>
                             <p class="animate__animated animate__fadeInUp">빅데이터 청년인재 고려대학교 과정 11조<br>김민석, 신은채</p>
                             <div>
                                 <a href="#about" class="btn-get-started animate__animated animate__fadeInUp scrollto">Start</a>
@@ -98,34 +98,33 @@
                 <div class="image col-xl-5 d-flex align-items-stretch justify-content-center justify-content-lg-start"></div>
                 <div class="col-xl-7 pl-0 pl-lg-5 pr-lg-1 d-flex align-items-stretch">
                     <div class="content d-flex flex-column justify-content-center">
-                        <h3>NoonMap 서비스 소개</h3>
+                        <h3>NOONMAP 서비스 소개</h3>
                         <p>
-                            도로 침수로 인한 많은 인명, 시설 등의 피해가 줄줄이 나타나고 있습니다. 이에 저희는 NoonMap 서비스를 통해 과거 하천 수위의 시계열 패턴을 파악하여 딥러닝
-                            모델을 통해 1시간 후의 하천 수위를 예측합니다. 예측한 하천 수위를 기반으로 수도권 내 교량들의 높이에 따른 침수 위험도를 맵을 통해 시각화하여 보여줌으로써 미래에
-                            일어날 피해를 감소시키기 위한 목적의 서비스입니다.
+                            서비스의 이름인 NOONMAP은 눈(NOON)으로 보는 맵(MAP)을 줄인 것으로,
+                            교량별 침수 위험도를 지도상에 나타내어 한눈에 볼 수 있는 저희 서비스의 특성을 나타냅니다.
+                            NOONMAP 서비스만의 특징은 현재의 침수 위험도가 아닌 1시간 후의 침수 위험도를 예측하여 제공한다는 점입니다.
+                            이는 과거 하천 수위의 패턴을 분석하고, 시계열 모델을 통해 예측한 1시간 후의 하천 수위와 교량별 높이를 고려하여 산출해낸 지표입니다.
                         </p>
                         <div class="row">
                             <div class="col-md-6 icon-box">
-                                <i class="bx bx-receipt"></i>
-                                <h4>기대 효과1</h4>
-                                <p>Consequuntur sunt aut quasi enim aliquam quae harum pariatur laboris nisi ut
-                                    aliquip</p>
+                                <i class="bx bx-line-chart"></i>
+                                <h4>서비스 구현</h4>
+                                <p>다양한 시계열 모델과 머신러닝 기법을 활용하여 1시간 후의 하천 수위를 예측합니다.</p>
                             </div>
                             <div class="col-md-6 icon-box">
-                                <i class="bx bx-cube-alt"></i>
-                                <h4>기대 효과2</h4>
-                                <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia
-                                    deserunt</p>
+                                <i class="bx bx-alarm-exclamation"></i>
+                                <h4>위험 기준</h4>
+                                <p>예측한 하천 수위가 교량 높이의 30% 미만인 경우는 안전, 60% 미만은 주의, 그 이상이면 위험으로 분류하였습니다.</p>
                             </div>
                             <div class="col-md-6 icon-box">
-                                <i class="bx bx-images"></i>
-                                <h4>기대 효과3</h4>
-                                <p>Aut suscipit aut cum nemo deleniti aut omnis. Doloribus ut maiores omnis facere</p>
+                                <i class="bx bx-map-pin"></i>
+                                <h4>시각화</h4>
+                                <p>분류한 위험도에 따라 지도상의 마커의 색을 달리하여 교량별 위험도를 손쉽게 파악할 수 있습니다.</p>
                             </div>
                             <div class="col-md-6 icon-box">
-                                <i class="bx bx-shield"></i>
-                                <h4>기대 효과4</h4>
-                                <p>Expedita veritatis consequuntur nihil tempore laudantium vitae denat pacta</p>
+                                <i class="bx bx-check-shield"></i>
+                                <h4>기대 효과</h4>
+                                <p>도로 침수로 인한 시설 및 인명 피해를 예방하고 감소시킬 수 있습니다.</p>
                             </div>
                         </div>
                     </div><!-- End .content-->
@@ -143,7 +142,7 @@
 
                 <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch">
                     <div class="count-box">
-                        <i class="icofont-simple-smile"></i>
+                        <i class="icofont-location-pin"></i>
                         <span data-toggle="counter-up">9</span>
                         <p><strong>서울 교량 수</strong></p>
                     </div>
@@ -151,7 +150,7 @@
 
                 <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch">
                     <div class="count-box">
-                        <i class="icofont-document-folder"></i>
+                        <i class="icofont-chart-bar-graph"></i>
                         <span data-toggle="counter-up">2</span>
                         <p><strong>인천 교량 수</strong></p>
                     </div>
@@ -159,7 +158,7 @@
 
                 <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch">
                     <div class="count-box">
-                        <i class="icofont-live-support"></i>
+                        <i class="icofont-chart-pie"></i>
                         <span data-toggle="counter-up">64</span>
                         <p><strong>경기 교량 수</strong></p>
                     </div>
@@ -167,7 +166,7 @@
 
                 <div class="col-lg-3 col-md-6 d-md-flex align-items-md-stretch">
                     <div class="count-box">
-                        <i class="icofont-users-alt-5"></i>
+                        <i class="icofont-dashboard-web"></i>
                         <span data-toggle="counter-up">75</span>
                         <p><strong>총 교량 수</strong></p>
                     </div>
@@ -191,24 +190,24 @@
 
             <div class="section-title">
                 <h2>Services</h2>
-                <p>수도권 지역 내의 교량별 하천 수위 및 침수 위험도를 예측합니다.</p>
+                <p>원하는 지역을 클릭하시면 예상 침수 위험도를 확인하실 수 있습니다.</p>
             </div>
 
             <div class="row">
                 <div class="col-lg-4 col-md-6 icon-box">
-                    <div class="icon"><i class="icofont-chart-bar-graph"></i></div>
+                    <div class="icon"><i class="icofont-search-2"></i></div>
                     <h4 class="title"><a href="{{ url_for('home', btn_area = 'seoul') }}">서울</a></h4>
-                    <p class="description">서울 교량들을 예측합니다.</p>
+                    <p class="description">서울 지역 교량별 침수 위험도</p>
                 </div>
                 <div class="col-lg-4 col-md-6 icon-box">
-                    <div class="icon"><i class="icofont-image"></i></div>
+                    <div class="icon"><i class="icofont-search-property"></i></div>
                     <h4 class="title"><a href="{{ url_for('home', btn_area = 'incheon') }}">인천</a></h4>
-                    <p class="description">인천 교량들을 예측합니다.</p>
+                    <p class="description">인천 지역 교량별 침수 위험도</p>
                 </div>
                 <div class="col-lg-4 col-md-6 icon-box">
-                    <div class="icon"><i class="icofont-settings"></i></div>
+                    <div class="icon"><i class="icofont-search-map"></i></div>
                     <h4 class="title"><a href="{{ url_for('home', btn_area = 'gyeonggi') }}">경기</a></h4>
-                    <p class="description">경기 교량들을 예측합니다.</p>
+                    <p class="description">경기 지역 교량별 침수 위험도</p>
                 </div>
                 <iframe class="mmap" src="/map" width="100%" height="700"></iframe>
 
@@ -260,8 +259,8 @@
                                 <h4>신은채</h4>
                                 <span>Team Member</span>
                                 <div class="social">
-                                    <a href="#team"><i class="icofont-email"></i></a><br>
-                                    <a href=""><i class="icofont-github"></i></a>
+                                    <a href="#team"><i class="icofont-email"> lefoumuet201@gmail.com</i></a><br>
+                                    <a href="https://github.com/ShinEunChae"><i class="icofont-github"></i> https://github.com/ShinEunChae</a>
                                 </div>
                             </div>
                         </div>
