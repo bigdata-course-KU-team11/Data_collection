@@ -48,7 +48,7 @@
 
         <nav class="nav-menu d-none d-lg-block">
             <ul>
-                <li class="active"><a href="index1.html">Home</a></li>
+                <li class="active"><a href="#hero">Home</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#services">Services</a></li>
                 <li><a href="#team">Team</a></li>
@@ -71,12 +71,18 @@
                 <div class="carousel-item active" style="background: url(static/assets/img/slide/home_image.png);">
                     <div class="carousel-container">
                         <div class="carousel-content">
-                            <h2 class="animate__animated animate__fadeInDown">교량별 침수 위험도 예측 서비스</h2>
+                            <h2 class="animate__animated animate__fadeInDown">교량별 침수 위험 예측 서비스</h2>
                             <p class="animate__animated animate__fadeInUp">수도권 내 교량의 침수 위험도를 예측하는<br>NOONMAP
                                 서비스를 시작합니다!</p>
                             <p class="animate__animated animate__fadeInUp">빅데이터 청년인재 고려대학교 과정 11조<br>김민석, 신은채</p>
                             <div>
                                 <a href="#about" class="btn-get-started animate__animated animate__fadeInUp scrollto">Start</a>
+                                {% if predict == 'confirm' %}
+                                    <br>
+                                    <a href="#services"
+                                       class="btn-get-started animate__animated animate__fadeInUp scrollto">Check the
+                                        Result</a>
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -98,11 +104,11 @@
                 <div class="image col-xl-5 d-flex align-items-stretch justify-content-center justify-content-lg-start"></div>
                 <div class="col-xl-7 pl-0 pl-lg-5 pr-lg-1 d-flex align-items-stretch">
                     <div class="content d-flex flex-column justify-content-center">
-                        <h3>NOONMAP 서비스 소개</h3>
+                        <h3>NoonMap 서비스 소개</h3>
                         <p>
                             서비스의 이름인 NOONMAP은 눈(NOON)으로 보는 맵(MAP)을 줄인 것으로,
                             교량별 침수 위험도를 지도상에 나타내어 한눈에 볼 수 있는 저희 서비스의 특성을 나타냅니다.
-                            NOONMAP 서비스만의 특징은 현재의 침수 위험도가 아닌 1시간 후의 침수 위험도를 예측하여 제공한다는 점입니다.
+                            NOONMAP 서비스는 현재의 침수 위험도가 아닌 1시간 후의 침수 위험도를 제공합니다.
                             이는 과거 하천 수위의 패턴을 분석하고, 시계열 모델을 통해 예측한 1시간 후의 하천 수위와 교량별 높이를 고려하여 산출해낸 지표입니다.
                         </p>
                         <div class="row">
@@ -191,22 +197,26 @@
             <div class="section-title">
                 <h2>Services</h2>
                 <p>원하는 지역을 클릭하시면 예상 침수 위험도를 확인하실 수 있습니다.</p>
+                <p>교량별 높이에 따른 위험도 기준: 교량 높이의 30% 미만(안전, 파랑), 60% 미만(주의, 노랑), 그 이상(위험, 빨강)</p>
             </div>
 
             <div class="row">
                 <div class="col-lg-4 col-md-6 icon-box">
                     <div class="icon"><i class="icofont-search-2"></i></div>
-                    <h4 class="title"><a href="{{ url_for('home', btn_area = 'seoul') }}">서울</a></h4>
+                    <h4 class="title"><a
+                            href="{{ url_for('home', btn_area = 'seoul', predict_start = 'confirm') }}">서울</a></h4>
                     <p class="description">서울 지역 교량별 침수 위험도</p>
                 </div>
                 <div class="col-lg-4 col-md-6 icon-box">
                     <div class="icon"><i class="icofont-search-property"></i></div>
-                    <h4 class="title"><a href="{{ url_for('home', btn_area = 'incheon') }}">인천</a></h4>
+                    <h4 class="title"><a href="{{ url_for('home', btn_area = 'incheon', predict_start = 'confirm') }}">인천</a>
+                    </h4>
                     <p class="description">인천 지역 교량별 침수 위험도</p>
                 </div>
                 <div class="col-lg-4 col-md-6 icon-box">
                     <div class="icon"><i class="icofont-search-map"></i></div>
-                    <h4 class="title"><a href="{{ url_for('home', btn_area = 'gyeonggi') }}">경기</a></h4>
+                    <h4 class="title"><a href="{{ url_for('home', btn_area = 'gyeonggi', predict_start = 'confirm') }}">경기</a>
+                    </h4>
                     <p class="description">경기 지역 교량별 침수 위험도</p>
                 </div>
                 <iframe class="mmap" src="/map" width="100%" height="700"></iframe>
@@ -216,6 +226,76 @@
 
         </div>
     </section><!-- End Services Section -->
+
+    <!-- ======= Prediction Result Section ======= -->
+    <section id="pricing" class="pricing">
+        <div class="container">
+
+            <div class="section-title">
+                <h2>Result</h2>
+                <p>교량의 침수 위험도 분류 예측 결과</p>
+            </div>
+
+            <div class="row">
+
+                <div class="col-lg-4 col-md-6">
+                    <div class="box">
+                        <h3>안전</h3>
+                        {% if result_brid != None %}
+                            {% for i in range(len_brid) %}
+                                {% if danger_text[i] == '안전' %}
+                                    <ul>
+                                        <li>{{ result_brid[i].bridge_name }}</li>
+                                    </ul>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <div class="btn-wrap">
+                            <a href="#services" class="btn-buy">Go to Map</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mt-4 mt-md-0">
+                    <div class="box">
+                        <h3>주의</h3>
+                        {% if result_brid != None %}
+                            {% for i in range(len_brid) %}
+                                {% if danger_text[i] == '주의' %}
+                                    <ul>
+                                        <li>{{ result_brid[i].bridge_name }}</li>
+                                    </ul>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <div class="btn-wrap">
+                            <a href="#services" class="btn-buy">Go to Map</a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 mt-4 mt-lg-0">
+                    <div class="box recommended">
+                        <h3>위험</h3>
+                        {% if result_brid != None %}
+                            {% for i in range(len_brid) %}
+                                {% if danger_text[i] == '위험' %}
+                                    <ul>
+                                        <li>{{ result_brid[i].bridge_name }}</li>
+                                    </ul>
+                                {% endif %}
+                            {% endfor %}
+                        {% endif %}
+                        <div class="btn-wrap">
+                            <a href="#services" class="btn-buy">Go to Map</a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </section><!-- End Predition Result Section -->
 
     <!-- ======= 경계선 Section ======= -->
     <section id="clients" class="clients section-bg">
@@ -237,14 +317,15 @@
 
                 <div class="col-lg-6 col-md-6">
                     <div class="member">
-                        <img src="static/assets/img/team/team-1.jpg" class="img-fluid" alt="">
+                        <img src="static/assets/img/team/team_member1.jpg" class="img-fluid" alt="">
                         <div class="member-info">
                             <div class="member-info-content">
                                 <h4>김민석</h4>
                                 <span>Team Member</span>
                                 <div class="social">
                                     <a href="#team"><i class="icofont-email"> mslove95@naver.com</i></a><br>
-                                    <a href="https://github.com/Mingoo12"><i class="icofont-github"> https://github.com/Mingoo12</i></a>
+                                    <a href="https://github.com/Mingoo12"><i class="icofont-github">
+                                        https://github.com/Mingoo12</i></a>
                                 </div>
                             </div>
                         </div>
@@ -253,14 +334,15 @@
 
                 <div class="col-lg-6 col-md-6" data-wow-delay="0.1s">
                     <div class="member">
-                        <img src="static/assets/img/team/team-2.jpg" class="img-fluid" alt="">
+                        <img src="static/assets/img/team/team_member2.jpg" class="img-fluid" alt="">
                         <div class="member-info">
                             <div class="member-info-content">
                                 <h4>신은채</h4>
                                 <span>Team Member</span>
                                 <div class="social">
                                     <a href="#team"><i class="icofont-email"> lefoumuet201@gmail.com</i></a><br>
-                                    <a href="https://github.com/ShinEunChae"><i class="icofont-github"></i> https://github.com/ShinEunChae</a>
+                                    <a href="https://github.com/ShinEunChae"><i class="icofont-github">
+                                        https://github.com/ShinEunChae</i></a>
                                 </div>
                             </div>
                         </div>
@@ -276,12 +358,12 @@
 
 <!-- ======= Footer ======= -->
 <footer id="footer">
-        <div class="copyright">
-            이상 <strong><span>NoonMap</span></strong> 서비스를 이용해주셔서 감사합니다.
-        </div>
-        <div class="credits">
-            빅데이터 청년인재 고려대학교 과정 11조<br><strong><span>김민석, 신은채</span></strong>
-        </div>
+    <div class="copyright">
+        이상 <strong><span>NoonMap</span></strong> 서비스를 이용해주셔서 감사합니다.
+    </div>
+    <div class="credits">
+        빅데이터 청년인재 고려대학교 과정 11조<br><strong><span>김민석, 신은채</span></strong>
+    </div>
 </footer><!-- End Footer -->
 
 <a href="#" class="back-to-top"><i class="icofont-simple-up"></i></a>

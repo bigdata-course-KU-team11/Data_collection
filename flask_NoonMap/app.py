@@ -212,32 +212,21 @@ predict()
 
 #################################################################
 area_value = None
+list_area = None
+len_area = None
+danger = []
 
 
-@app.route('/#services')
-@app.route('/home')
-@app.route('/')
-def home():
+def pred_brid():
     global area_value
-    if request.method == 'GET':
-        area_value = request.args.get('btn_area', 0)  # area button get value
-        print(area_value)
+    global list_area
+    global len_area
+    global danger
 
-        # get definition of map in body
-        # map_div.append(Markup(folium_map.get_root().html.render()))  # html 소스를 리턴
-        # # html to be included in header
-        # hdr_txt.append(Markup(folium_map.get_root().header.render()))
-        # # html to be included in <script>
-        # script_txt.append(Markup(folium_map.get_root().script.render()))
-
-    return render_template('index1.html')
-
-
-@app.route('/map')
-def mmap():
-    global area_value
     list_area = None
+    len_area = None
     pred_wl = None
+
     if area_value == 'seoul':
         list_area = list_seoul
         pred_wl = pred_tmp[0]
@@ -249,6 +238,9 @@ def mmap():
         pred_wl = pred_tmp[2]
     print(pred_wl)
     print(list_area)  # list의 select 결과
+
+    if list_area != None:
+        len_area = len(list_area)
     #############################################################################
 
     start_coords = (37.5642135, 127.0016985)  # 시작 좌표
@@ -268,18 +260,27 @@ def mmap():
 
     folium_map = MarkerCluster().add_to(m)
 
-    danger = []
+    danger.clear()
     if list_area != None:
         for i in range(len(list_area)):
-            text = "이름: " + str(list_area[i].bridge_name) + "<br>높이: " + str(
-                list_area[i].bridge_height) + "<br>수위: " + str(pred_wl[i])
-            pp_text = folium.IFrame(text, width=220, height=110)
+            text = """\
+                <table style=width:100%>
+                    <tr>
+                        <th>교량 이름</th> <th>교량 높이</th> <th>예측 수위</th>
+                    </tr>
+                    <tr>
+                        <td>{0}</td> <td>&nbsp;&nbsp;&nbsp;{1:.2f}m</td> <td>&nbsp;&nbsp;&nbsp;{2:.2f}m</td>
+                    </tr>
+                </table> """.format(str(list_area[i].bridge_name),
+                                    list_area[i].bridge_height * 0.01,
+                                    pred_wl[i] * 0.01)
+            pp_text = folium.IFrame(text, width=350, height=80)
             pp = folium.Popup(pp_text, max_width=400)
             if list_area[i].bridge_height * 0.3 > pred_wl[i]:
                 print('blue: ')
                 print(pred_wl[i], list_area[i].bridge_height * 0.3)
                 ic = folium.Icon(color='blue', icon='info-sign')
-                danger.append('양호')
+                danger.append('안전')
             elif list_area[i].bridge_height * 0.6 > pred_wl[i]:
                 print('yellow: ')
                 print(pred_wl[i], list_area[i].bridge_height * 0.6)
@@ -296,11 +297,32 @@ def mmap():
                 icon=ic,
             ).add_to(folium_map)
 
-    #############################################################################
-
     folium_map.save('templates/map_{0}.html'.format(area_value))
 
+
+@app.route('/map')
+def mmap():
+    global area_value
+
     return render_template('map_{0}.html'.format(area_value))
+
+
+@app.route('/home')
+@app.route('/')
+def home():
+    global area_value
+    global list_area
+    global len_area
+    global danger
+
+    if request.method == 'GET':
+        area_value = request.args.get('btn_area', 0)  # area button get value
+        print(area_value)
+
+    predict_start = request.args.get('predict_start', 0)
+    pred_brid()
+
+    return render_template('index1.html', predict=predict_start, result_brid=list_area, len_brid=len_area, danger_text=danger)
 
 
 if __name__ == '__main__':
