@@ -138,7 +138,7 @@ def crawling_WL():
 
 
 # scheduler1 = BackgroundScheduler()
-# scheduler1.add_job(func=crawling_WL, trigger='interval', hours=1, start_date='2020-09-14 03:03:00')
+# scheduler1.add_job(func=crawling_WL, trigger='interval', hours=1, start_date='2020-09-14 18:00:00')
 # scheduler1.start()
 
 
@@ -170,6 +170,7 @@ pred_tmp = []
 
 def predict():
     global pred_tmp
+    pred_tmp.clear()
     prediction = []
     for area_cnt in range(3):
         loc_area = []  # loc_area 빈 리스트
@@ -203,34 +204,38 @@ def predict():
 # start_date에 스케줄러가 실행되어도 back 단에서 수행되므로 웹은 이미 실행되어 있고, 사용자가 예측값을 보려할 때 값이 없을 수 있으므로 미리 예측해주는 것(초기 예측값)
 predict()
 
-
 # 이후 스케줄러를 통해 1시간마다 예측 수행
-scheduler2 = BackgroundScheduler()
-scheduler2.add_job(func=predict, trigger='interval', hours=1, start_date='2020-09-15 13:00:00')  # start_date는 직접 수정하기
-scheduler2.start()
+# scheduler2 = BackgroundScheduler()
+# scheduler2.add_job(func=predict, trigger='interval', hours=1, start_date='2020-09-14 18:10:00')  # start_date는 직접 수정하기
+# scheduler2.start()
 
 
 #################################################################
+area_value = None
 
-@app.route('/home', methods=['GET', 'POST'])
-@app.route('/', methods=['GET', 'POST'])
+
+@app.route('/#services')
+@app.route('/home')
+@app.route('/')
 def home():
-    status = request.args.get('status', '0')  # home button get value
-    print(status)
-
-    #############################################################################
-
-    area_value = None
+    global area_value
     if request.method == 'GET':
-        area_value = request.args.get('btn_area', '0')  # area button get value
-    print(area_value)
+        area_value = request.args.get('btn_area', 0)  # area button get value
+        print(area_value)
 
-    #############################################################################
+        # get definition of map in body
+        # map_div.append(Markup(folium_map.get_root().html.render()))  # html 소스를 리턴
+        # # html to be included in header
+        # hdr_txt.append(Markup(folium_map.get_root().header.render()))
+        # # html to be included in <script>
+        # script_txt.append(Markup(folium_map.get_root().script.render()))
 
-    rain = Rain_msg.query.all()  # (SELECT * FROM 테이블명)과 동일함
+    return render_template('index1.html')
 
-    #############################################################################
 
+@app.route('/map')
+def mmap():
+    global area_value
     list_area = None
     pred_wl = None
     if area_value == 'seoul':
@@ -244,10 +249,6 @@ def home():
         pred_wl = pred_tmp[2]
     print(pred_wl)
     print(list_area)  # list의 select 결과
-
-    len_area = None
-    if list_area != None:
-        len_area = len(list_area)
     #############################################################################
 
     start_coords = (37.5642135, 127.0016985)  # 시작 좌표
@@ -268,7 +269,6 @@ def home():
     folium_map = MarkerCluster().add_to(m)
 
     danger = []
-
     if list_area != None:
         for i in range(len(list_area)):
             text = "이름: " + str(list_area[i].bridge_name) + "<br>높이: " + str(
@@ -298,19 +298,9 @@ def home():
 
     #############################################################################
 
-    _ = m._repr_html_()
+    folium_map.save('templates/map_{0}.html'.format(area_value))
 
-    # get definition of map in body
-    map_div = Markup(folium_map.get_root().html.render())  # html 소스를 리턴
-    # html to be included in header
-    hdr_txt = Markup(folium_map.get_root().header.render())
-    # html to be included in <script>
-    script_txt = Markup(folium_map.get_root().script.render())
-
-    #############################################################################
-
-    return render_template('index.html', status=status, map_div=map_div, hdr_txt=hdr_txt, script_txt=script_txt,
-                           result_rain=rain, result_brid=list_area, pred=pred_wl, len_brid=len_area, danger_text=danger)
+    return render_template('map_{0}.html'.format(area_value))
 
 
 if __name__ == '__main__':

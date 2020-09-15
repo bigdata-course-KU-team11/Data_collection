@@ -1,17 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="DataSourceManagerImpl" format="xml" multifile-model="true">
-    <data-source source="LOCAL" name="bridge" uuid="37bf972d-3ef3-4201-ad19-bfa9261cdb7c">
+    <data-source source="LOCAL" name="bridge_db" uuid="6e0b32c9-5a1f-490f-8fbf-e8f9a0902d90">
       <driver-ref>sqlite.xerial</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\flask_NoonMap\bridge.db</jdbc-url>
-    </data-source>
-    <data-source source="LOCAL" name="rain_msg" uuid="268eb596-9e40-4245-9084-cacb5321bf7e">
-      <driver-ref>sqlite.xerial</driver-ref>
-      <synchronize>true</synchronize>
-      <jdbc-driver>org.sqlite.JDBC</jdbc-driver>
-      <jdbc-url>jdbc:sqlite:C:\flask_NoonMap\rain_msg.db</jdbc-url>
+      <jdbc-url>jdbc:sqlite:C:\flaskProject\bridge_db.db</jdbc-url>
+      <libraries>
+        <library>
+          <url>file://$APPLICATION_CONFIG_DIR$/jdbc-drivers/Xerial SQLiteJDBC/3.31.1/sqlite-jdbc-3.31.1.jar</url>
+        </library>
+      </libraries>
     </data-source>
   </component>
 </project>
