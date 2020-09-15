@@ -1,6 +1,6 @@
 import folium
 import json
-from flask import Flask, render_template, Markup, request
+from flask import Flask, render_template, request
 from flask_sqlalchemy import SQLAlchemy
 from folium.plugins import MarkerCluster
 from datetime import datetime
@@ -12,9 +12,9 @@ import urllib
 from bs4 import BeautifulSoup
 import sqlite3
 
-app = Flask(__name__)  # bridge.db, rain_msg.db 연동
+app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = "sqlite:///bridge_db.db"
-app.config['SQLALCHEMY_BINDS'] = {  # multiple databases
+app.config['SQLALCHEMY_BINDS'] = {
     'bridge_key': 'sqlite:///bridge_db.db',
     'rain_key': 'sqlite:///rain_msg.db'
 }
@@ -44,9 +44,9 @@ class Bridge(db.Model):
     bridge_height = db.Column(db.Float)
 
 
-class Rain_msg(db.Model):  # db.Model을 상속받으면 db.Column()메소드 사용 가능
+class Rain_msg(db.Model):
     __tablename__ = 'RAIN_MSG'
-    __bind_key__ = 'rain_key'  # multiple db의 bind key
+    __bind_key__ = 'rain_key'
     index = db.Column(db.Integer, primary_key=True)
     create_date = db.Column(db.Text)
     location_id = db.Column(db.Text)
@@ -58,50 +58,39 @@ class Rain_msg(db.Model):  # db.Model을 상속받으면 db.Column()메소드 �
 #################################################################
 
 
-db.create_all(bind='bridge_key')  # 테이블 생성
+db.create_all(bind='bridge_key')
 db.create_all(bind='rain_key')
+
 
 #################################################################
 
 
 list_seoul = db.session.query(Bridge.latitude, Bridge.longitude,
                               Bridge.bridge_name, Bridge.bridge_height, Bridge.obs_date, Bridge.WL,
-                              Bridge.address, Bridge.etc_address).group_by(Bridge.location_start).filter_by(
-    address="서울특별시").all()
+                              Bridge.address, Bridge.etc_address).group_by(Bridge.location_start).filter_by(address="서울특별시").all()
 
 list_incheon = db.session.query(Bridge.latitude, Bridge.longitude,
                                 Bridge.bridge_name, Bridge.bridge_height, Bridge.obs_date, Bridge.WL,
-                                Bridge.address, Bridge.etc_address).group_by(Bridge.location_start).filter_by(
-    address="인천광역시").all()
+                                Bridge.address, Bridge.etc_address).group_by(Bridge.location_start).filter_by(address="인천광역시").all()
 
 list_gyeonggi = db.session.query(Bridge.latitude, Bridge.longitude,
                                  Bridge.bridge_name, Bridge.bridge_height, Bridge.obs_date, Bridge.WL,
-                                 Bridge.address, Bridge.etc_address).group_by(Bridge.location_start).filter_by(
-    address="경기도").all()
+                                 Bridge.address, Bridge.etc_address).group_by(Bridge.location_start).filter_by(address="경기도").all()
 
-brid_list = [p for (p,) in
-             db.session.query(Bridge.location_start).group_by(Bridge.location_start).order_by(Bridge.id)]  # 교량 목록
-loc_seoul = [p for (p,) in
-             db.session.query(Bridge.location_start).group_by(Bridge.location_start).filter_by(address='서울특별시')]
-loc_incheon = [p for (p,) in
-               db.session.query(Bridge.location_start).group_by(Bridge.location_start).filter_by(address='인천광역시')]
-loc_gyeonggi = [p for (p,) in
-                db.session.query(Bridge.location_start).group_by(Bridge.location_start).filter_by(address='경기도')]
+brid_list = [p for (p,) in db.session.query(Bridge.location_start).group_by(Bridge.location_start).order_by(Bridge.id)]  # 교량 목록
+loc_seoul = [p for (p,) in db.session.query(Bridge.location_start).group_by(Bridge.location_start).filter_by(address='서울특별시')]
+loc_incheon = [p for (p,) in db.session.query(Bridge.location_start).group_by(Bridge.location_start).filter_by(address='인천광역시')]
+loc_gyeonggi = [p for (p,) in db.session.query(Bridge.location_start).group_by(Bridge.location_start).filter_by(address='경기도')]
 
-station_db_list = [p for (p,) in db.session.query(Bridge.wl_station_code).group_by(Bridge.location_start).order_by(
-    Bridge.id)]  # 하천 수위 관측소 목록
-wl_seoul = [p for (p,) in
-            db.session.query(Bridge.wl_station_code).group_by(Bridge.location_start).filter_by(address='서울특별시')]
-wl_incheon = [p for (p,) in
-              db.session.query(Bridge.wl_station_code).group_by(Bridge.location_start).filter_by(address='인천광역시')]
-wl_gyeonggi = [p for (p,) in
-               db.session.query(Bridge.wl_station_code).group_by(Bridge.location_start).filter_by(address='경기도')]
+station_db_list = [p for (p,) in db.session.query(Bridge.wl_station_code).group_by(Bridge.location_start).order_by(Bridge.id)]  # 하천 수위 관측소 목록
+wl_seoul = [p for (p,) in db.session.query(Bridge.wl_station_code).group_by(Bridge.location_start).filter_by(address='서울특별시')]
+wl_incheon = [p for (p,) in db.session.query(Bridge.wl_station_code).group_by(Bridge.location_start).filter_by(address='인천광역시')]
+wl_gyeonggi = [p for (p,) in db.session.query(Bridge.wl_station_code).group_by(Bridge.location_start).filter_by(address='경기도')]
 
 
 #################################################################
 
 
-# 교량 중복으로 들어가는 문제 해결
 def crawling_WL():
     url = 'http://www.hrfco.go.kr/sumun/waterlevelList.do'
     req = urllib.request.urlopen(url)
@@ -125,21 +114,19 @@ def crawling_WL():
                           + " wl_station_code, station_name, location, obs_date, WL, bridge_height, brid_height_origin)" \
                           + " SELECT bridge_name, address, etc_address, latitude, longitude, location_start," \
                           + " wl_station_code, station_name, location, obs_date, WL, bridge_height, brid_height_origin" \
-                          + " FROM BRIDGE WHERE wl_station_code = " + str(i) + " and location_start = '" + brid_list[
-                              j] + "' LIMIT 1;"
+                          + " FROM BRIDGE WHERE wl_station_code = " + str(i) + " and location_start = '" + brid_list[j] + "' LIMIT 1;"
             curs.execute(insert_temp)
             conn.commit()
-            insert_wl = "UPDATE BRIDGE SET obs_date='" + now + "', WL=" + str(
-                y * 100) + " WHERE id = (SELECT max(id) FROM BRIDGE);"
+            insert_wl = "UPDATE BRIDGE SET obs_date='" + now + "', WL=" + str(y * 100) + " WHERE id = (SELECT max(id) FROM BRIDGE);"
             curs.execute(insert_wl)
             conn.commit()
         else:
             pass
 
 
-# scheduler1 = BackgroundScheduler()
-# scheduler1.add_job(func=crawling_WL, trigger='interval', hours=1, start_date='2020-09-14 18:00:00')
-# scheduler1.start()
+scheduler1 = BackgroundScheduler()
+scheduler1.add_job(func=crawling_WL, trigger='interval', hours=1, start_date='2020-09-15 17:00:00')
+scheduler1.start()
 
 
 #################################################################
@@ -164,16 +151,13 @@ def re_rescale(input_value, oldmin, oldmax):
     return oldi
 
 
-# 예측 수위 값 지역별로 저장할 리스트
 pred_tmp = []
-
-
 def predict():
     global pred_tmp
     pred_tmp.clear()
     prediction = []
     for area_cnt in range(3):
-        loc_area = []  # loc_area 빈 리스트
+        loc_area = []
         pred_area_wl = []
         if area_cnt == 0:
             loc_area = loc_seoul
@@ -195,22 +179,19 @@ def predict():
             new_model = keras.models.load_model(model_path)
             new_result = new_model.predict(input_data)[0][0]
             pred_area_wl.append(re_rescale(new_result, min(value), max(value)))
-        prediction.append(pred_area_wl)  # 지역별로 예측한 수위 값이 담긴 pred_wl 리스트를 prediction 리스트에 넣기
+        prediction.append(pred_area_wl)
 
     pred_tmp = prediction
 
 
-# 미리 예측 수행, 스케줄러 start 전 초기 prediction 값을 넣어줘서 맨 처음 웹 시작 때 예측 값을 보여준다.
-# start_date에 스케줄러가 실행되어도 back 단에서 수행되므로 웹은 이미 실행되어 있고, 사용자가 예측값을 보려할 때 값이 없을 수 있으므로 미리 예측해주는 것(초기 예측값)
 predict()
-
-# 이후 스케줄러를 통해 1시간마다 예측 수행
-# scheduler2 = BackgroundScheduler()
-# scheduler2.add_job(func=predict, trigger='interval', hours=1, start_date='2020-09-14 18:10:00')  # start_date는 직접 수정하기
-# scheduler2.start()
+scheduler2 = BackgroundScheduler()
+scheduler2.add_job(func=predict, trigger='interval', hours=1, start_date='2020-09-15 17:04:00')
+scheduler2.start()
 
 
 #################################################################
+
 area_value = None
 list_area = None
 len_area = None
@@ -237,18 +218,19 @@ def pred_brid():
         list_area = list_gyeonggi
         pred_wl = pred_tmp[2]
     print(pred_wl)
-    print(list_area)  # list의 select 결과
+    print(list_area)
 
     if list_area != None:
         len_area = len(list_area)
+
     #############################################################################
 
-    start_coords = (37.5642135, 127.0016985)  # 시작 좌표
+    start_coords = (37.5642135, 127.0016985)
     m = folium.Map(location=start_coords, zoom_start=9, width='100%')
 
     #############################################################################
 
-    with open('sudo_geo.json', mode='rt', encoding='utf-8') as f:  # 수도권 지역 geojson 경계선 표시
+    with open('sudo_geo.json', mode='rt', encoding='utf-8') as f:
         geo_sudo = json.loads(f.read())
 
     folium.GeoJson(
@@ -316,7 +298,7 @@ def home():
     global danger
 
     if request.method == 'GET':
-        area_value = request.args.get('btn_area', 0)  # area button get value
+        area_value = request.args.get('btn_area', 0)
         print(area_value)
 
     predict_start = request.args.get('predict_start', 0)
