@@ -24,6 +24,9 @@
     pip uninstall -r requirement.txt 명령어를 통해 삭제도 가능합니다.
     pip freeze > requirement.txt 명령어를 통해 설치한 모든 패키지 정리가 가능합니다.
     
+  ### Database
+    해당 Github에서는 프로젝트의 bridge_db.db 파일을 별도 첨부하지 않았습니다.
+    
   ### 개발 환경
     데이터 수집, 전처리, DB 생성, 모델 개발: Jupyter Notebook, SQLite, Colab, Python
     웹 서비스 구현: Flask, Bootstrap, SQLAlchemy(ORM), HTML, CSS, JavaScript
